@@ -74,5 +74,5 @@ jobs:
           tag="build-$(date -u +%Y%m%d-%H%M)-$(git rev-parse --short HEAD)"
           gh release create "$tag" "$apk" --repo "$GITHUB_REPOSITORY" \
             --title "$(basename "$apk" .apk) ($(git rev-parse --short HEAD))" \
-            --notes "Upstream moneytoo/Player merged with the 275 MB buffer change. Commit $(git rev-parse HEAD)." \
+            --notes "Upstream moneytoo/Player merged with the 250 MB buffer change. Commit $(git rev-parse HEAD)." \
             --latest

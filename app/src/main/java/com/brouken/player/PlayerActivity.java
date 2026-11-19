@@ -1229,7 +1229,7 @@ public class PlayerActivity extends Activity {
         @SuppressLint("WrongConstant") RenderersFactory renderersFactory = new DefaultRenderersFactory(this)
                 .setExtensionRendererMode(mPrefs.decoderPriority);
 
-        // Custom buffer: fill up to 275 MB ahead of playback (device heap cap is 384 MB). The time limits are set very high
+        // Custom buffer: fill up to 250 MB ahead of playback (device heap cap is 384 MB). The time limits are set very high
         // so the byte target (not the default ~50 s) is what normally stops buffering.
         final int bufferDurationMs = 4 * 60 * 60 * 1000; // 4 hours
         DefaultLoadControl loadControl = new DefaultLoadControl.Builder()
@@ -1238,7 +1238,7 @@ public class PlayerActivity extends Activity {
                         bufferDurationMs,
                         DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_MS,
                         DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS)
-                .setTargetBufferBytes(275 * 1024 * 1024) // 275 MB
+                .setTargetBufferBytes(250 * 1024 * 1024) // 250 MB
                 .setPrioritizeTimeOverSizeThresholds(false)
                 .build();
 
