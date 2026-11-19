@@ -76,6 +76,7 @@ import androidx.media3.common.TrackSelectionOverride;
 import androidx.media3.common.TrackSelectionParameters;
 import androidx.media3.common.Tracks;
 import androidx.media3.datasource.DefaultHttpDataSource;
+import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.ExoPlaybackException;
 import androidx.media3.exoplayer.ExoPlayer;
@@ -1228,7 +1229,21 @@ public class PlayerActivity extends Activity {
         @SuppressLint("WrongConstant") RenderersFactory renderersFactory = new DefaultRenderersFactory(this)
                 .setExtensionRendererMode(mPrefs.decoderPriority);
 
+        // Custom buffer: fill up to 275 MB ahead of playback (device heap cap is 384 MB). The time limits are set very high
+        // so the byte target (not the default ~50 s) is what normally stops buffering.
+        final int bufferDurationMs = 4 * 60 * 60 * 1000; // 4 hours
+        DefaultLoadControl loadControl = new DefaultLoadControl.Builder()
+                .setBufferDurationsMs(
+                        bufferDurationMs,
+                        bufferDurationMs,
+                        DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_MS,
+                        DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS)
+                .setTargetBufferBytes(275 * 1024 * 1024) // 275 MB
+                .setPrioritizeTimeOverSizeThresholds(false)
+                .build();
+
         ExoPlayer.Builder playerBuilder = new ExoPlayer.Builder(this, renderersFactory)
+                .setLoadControl(loadControl)
                 .setTrackSelector(trackSelector)
                 .setMediaSourceFactory(new DefaultMediaSourceFactory(this, extractorsFactory));
 
